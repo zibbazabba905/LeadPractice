@@ -17,17 +17,25 @@ public class HunterAim : MonoBehaviour
     public GunScript CurrentGun;
     private SensitivityLevels rSensLevels;
     private WeaponDisplay rWeaponDisplay;
+    private PlayerInput PInput;
     public bool UseGunslinger;
     public bool CanShoot;
+
+    public bool BeenSprinting;
 
     void Awake()
     {
         rSensLevels = GetComponent<SensitivityLevels>();
         rWeaponDisplay = GetComponent<WeaponDisplay>();
+        PInput = GetComponent<PlayerInput>();
     }
 
     void Update()
     {
+        if (PInput.GetSprintInput())
+            BeenSprinting = true;
+
+
         if (!GameManager.Instance.InMenus)
 
             if (UseGunslinger)
@@ -35,6 +43,7 @@ public class HunterAim : MonoBehaviour
             else
                 HunterControl();
     }
+
 
     private void HunterControl()
     {
@@ -46,12 +55,19 @@ public class HunterAim : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            ADSView();
-            return;
+            if (!BeenSprinting)
+            {
+                ADSView();
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+                BeenSprinting = false;
         }
 
         HipView();
     }
+
     public void GunslingerControl()
     {
         if (Input.GetMouseButton(1)) //right click
@@ -68,6 +84,7 @@ public class HunterAim : MonoBehaviour
 
         HipView();
     }
+
 
     private void DownView()
     {
