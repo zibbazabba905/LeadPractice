@@ -33,7 +33,4 @@ public class CCMovment : MonoBehaviour
     {
         return Vector3.Distance(DesiredPosition, transform.position) < MinimumDistance;
     }
-
-
-
 }
